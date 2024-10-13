@@ -33,7 +33,8 @@ metadata:
 spec:
   selector:
     app: grafana
+  type: NodePort
   ports:
   - port: 3000
     targetPort: 3000
-  type: ClusterIP
+    nodePort: 30030
