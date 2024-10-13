@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: ebpf-service-monitor
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: ebpf-probe  # Label that matches your DaemonSet or Pod
+  endpoints:
+  - port: metrics  # The port where your Prometheus metrics are exposed
+    path: /metrics  # The path of your Prometheus metrics
+    interval: 15s

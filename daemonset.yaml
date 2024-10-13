@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: ebpf-daemonset
+  labels:
+    app: ebpf-probe
+  annotations:
+    prometheus.io/scrape: "true"        # Enable scraping
+    prometheus.io/port: "8000" 
+spec:
+  selector:
+    matchLabels:
+      app: ebpf-probe
+  template:
+    metadata:
+      labels:
+        app: ebpf-probe
+      annotations:
+        prometheus.io/scrape: "true"    # Enable scraping at the pod level
+        prometheus.io/port: "8000"      # Specify the metrics port
+    spec:
+      containers:
+      - name: ebpf-probe
+        image: rhs95/ebpf-probe:latest
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          privileged: true
+          capabilities:
+            add: ["SYS_ADMIN"]
+        ports:
+        - containerPort: 8000
+          name: metrics
+        volumeMounts:
+        - name: lib-modules
+          mountPath: /lib/modules
+        - name: usr-src
+          mountPath: /usr/src
+      volumes:
+      - name: lib-modules
+        hostPath:
+          path: /lib/modules
+      - name: usr-src
+        hostPath:
+          path: /usr/src
