@@ -9,5 +9,4 @@ RUN apk add --no-cache \
     bpftool
 
 ADD user_space.py /root/
-
 CMD ["python3", "root/user_space.py"]
